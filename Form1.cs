@@ -35,9 +35,9 @@ namespace FakeDataGeneratorWindows
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-
+            var text = sender as TextBox;
             // int.TryParse($"{sender}", out int result);
-            amount = int.Parse($"{sender}");
+            amount = int.Parse($"{text.Text}");
             
         }
 
