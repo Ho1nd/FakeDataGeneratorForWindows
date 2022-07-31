@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 using static System.Console;
 
 namespace FakeDataGeneratorWindows
@@ -16,10 +13,9 @@ namespace FakeDataGeneratorWindows
     {
         private static int amount = 100;
 
-        private static bool idBool = false;
-        private static bool nameBool = false;
-        private static bool lastNameBool = false;
-        private static bool patronymicBool = false;
+        private static List<string> FirstNames = File.ReadAllLines("Data/nameB.txt").ToList();
+        private static List<string> LastNames = File.ReadAllLines("Data/middle.txt").ToList();
+        private static List<string> PatronymicList = File.ReadAllLines("Data/last.txt").ToList();
 
         public Form1()
         {
@@ -28,16 +24,23 @@ namespace FakeDataGeneratorWindows
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         private void Output(object sender, EventArgs e)
         {
+            Dictionary<string, bool> dict = new Dictionary<string, bool>();
+
+            foreach (CheckBox item in panel1.Controls)
+            {
+                dict.Add(item.Text, item.Checked);
+            }
+
             StreamWriter f = new StreamWriter("FakeData.txt");
 
             f.Close();
 
-            Generate(amount, idBool, nameBool, lastNameBool, patronymicBool);
+            Generate(amount, dict);
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -48,32 +51,17 @@ namespace FakeDataGeneratorWindows
             {
                 amount = result;
             }
-            
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            var checkBoxId = sender as CheckBox;
-
-            if (checkBoxId.Checked)
-            {
-                idBool = true;
-            }
-            else
-            {
-                idBool = false;
-            }
-        }
-
-        public static void Generate(int amount, bool idBool, bool nameBool, bool lastNameBool, bool patronymicBool)
-        {
-            List<string> FirstNames = new List<string>() { "Алексей", "Владимир", "Дмитрий", "Константин", "Елена", "Борис", "Егор", "Александр", "Андрей", "Антон", "Адам" };
-            List<string> LastNames = new List<string>() { "Кузнецов", "Загаров", "Богомолов", "Азарнов", "Иванов", "Смирнов", "Васильев", "Соколов", "Михайлов", "Петров", "Попов" };
-            List<string> PatronymicList = new List<string>() { "Петрович", "Валерьевич", "Александрович", "Борисович", "Сергеевич", "Геннадьевич", "Дмитриевич", "Никитич", "Ильич", "Кириллович", "Иваныч" };
-            
+        public static void Generate(int amount, Dictionary<string, bool> dict)
+        {            
             Random rnd = new Random();
 
             int id = 0;
+
+            StringBuilder sb = new StringBuilder();
+
+            StreamWriter f = new StreamWriter("FakeData.txt", true);
 
             for (int i = 0; i < amount; i++)
             {
@@ -82,87 +70,35 @@ namespace FakeDataGeneratorWindows
                 int randIndexPatronymicList = rnd.Next(PatronymicList.Count);
 
                 Person person = new Person() { Id = $"{id}", FirstName = $"{FirstNames[randIndexFirstName]}", LastName = $"{LastNames[randIndexLastName]}", Patronymic = $"{PatronymicList[randIndexPatronymicList]}" };
-                StreamWriter f = new StreamWriter("FakeData.txt", true);
-                if (idBool == true)
+
+
+                if (dict["Id"] == true)
                 {
-                    f.Write($"Id='{person.Id}', ");
+                    sb.Append($"Id='{person.Id}', ");
 
                     id++;
                 }
 
-                if (nameBool == true)
+                if (dict["Имя"] == true)
                 {
-                    f.Write($"FirstName='{person.FirstName}', ");   
+                    sb.Append($"FirstName='{person.FirstName}', ");
                 }
 
-                if (lastNameBool == true)
+                if (dict["Фамилия"] == true)
                 {
-                    f.Write($"LastName='{person.LastName}', ");
+                    sb.Append($"LastName='{person.LastName}', ");
                 }
 
-                if (patronymicBool == true)
+                if (dict["Отчество"] == true)
                 {
-                    f.Write($"Patronymic='{person.Patronymic}', ");
+                    sb.Append($"Patronymic='{person.Patronymic}', ");
                 }
 
-                f.WriteLine();
-                f.Close();
-            
+                sb.AppendLine();
             }
 
-        }
-
-        public class Person
-        {
-            public string Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Patronymic { get; set; }
-            
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBox4_CheckedChanged(object sender, EventArgs e)
-        {
-            var checkBoxPatronymic = sender as CheckBox;
-            if (checkBoxPatronymic.Checked)
-            {
-                patronymicBool = true;
-            }
-            else
-            {
-                patronymicBool = false;
-            }
-        }
-
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
-        {
-            var checkBoxLastName = sender as CheckBox;
-            if (checkBoxLastName.Checked)
-            {
-                lastNameBool = true;
-            }
-            else
-            {
-                lastNameBool = false;
-            }
-        }
-
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-            var checkBoxName = sender as CheckBox;
-            if (checkBoxName.Checked)
-            {
-                nameBool = true;
-            }
-            else
-            {
-                nameBool = false;
-            }
+            f.Write(sb.ToString());
+            f.Close();
         }
     }
 }
