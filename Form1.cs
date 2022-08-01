@@ -63,42 +63,47 @@ namespace FakeDataGeneratorWindows
             string basepath = AppDomain.CurrentDomain.BaseDirectory;
 
             StreamWriter f = new StreamWriter($@"{basepath}\FakeData.txt", true);
-
-            for (int i = 0; i < amount; i++)
+            try
             {
-                int randIndexFirstName = rnd.Next(FirstNames.Count);
-                int randIndexLastName = rnd.Next(LastNames.Count);
-                int randIndexPatronymicList = rnd.Next(PatronymicList.Count);
-
-                Person person = new Person() { Id = $"{id}", FirstName = $"{FirstNames[randIndexFirstName]}", LastName = $"{LastNames[randIndexLastName]}", Patronymic = $"{PatronymicList[randIndexPatronymicList]}" };
-
-
-                if (dict["Id"] == true)
+                for (int i = 0; i < amount; i++)
                 {
-                    sb.Append($"Id='{person.Id}', ");
+                    int randIndexFirstName = rnd.Next(FirstNames.Count);
+                    int randIndexLastName = rnd.Next(LastNames.Count);
+                    int randIndexPatronymicList = rnd.Next(PatronymicList.Count);
 
-                    id++;
-                }
+                    Person person = new Person() { Id = $"{id}", FirstName = $"{FirstNames[randIndexFirstName]}", LastName = $"{LastNames[randIndexLastName]}", Patronymic = $"{PatronymicList[randIndexPatronymicList]}" };
 
-                if (dict["Имя"] == true)
-                {
-                    sb.Append($"FirstName='{person.FirstName}', ");
-                }
 
-                if (dict["Фамилия"] == true)
-                {
-                    sb.Append($"LastName='{person.LastName}', ");
-                }
+                    if (dict["Id"] == true)
+                    {
+                        sb.Append($"Id='{person.Id}', ");
 
-                if (dict["Отчество"] == true)
-                {
-                    sb.Append($"Patronymic='{person.Patronymic}', ");
-                }
+                        id++;
+                    }
 
-                sb.AppendLine();
-            };
+                    if (dict["Имя"] == true)
+                    {
+                        sb.Append($"FirstName='{person.FirstName}', ");
+                    }
+
+                    if (dict["Фамилия"] == true)
+                    {
+                        sb.Append($"LastName='{person.LastName}', ");
+                    }
+
+                    if (dict["Отчество"] == true)
+                    {
+                        sb.Append($"Patronymic='{person.Patronymic}', ");
+                    }
+
+                    sb.AppendLine();
+                };
                 f.Write(sb.ToString());
                 f.Close();
+            }
+
+            catch { }
+           
         }
     }
 }
