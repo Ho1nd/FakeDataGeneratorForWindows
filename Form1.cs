@@ -62,9 +62,10 @@ namespace FakeDataGeneratorWindows
             //Путь к EXE файлу:
             string basepath = AppDomain.CurrentDomain.BaseDirectory;
 
-            StreamWriter f = new StreamWriter($@"{basepath}\FakeData.txt", true);
+
             try
             {
+                StreamWriter f = new StreamWriter($@"{basepath}\FakeData.txt", true);
                 for (int i = 0; i < amount; i++)
                 {
                     int randIndexFirstName = rnd.Next(FirstNames.Count);
