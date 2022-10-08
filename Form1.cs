@@ -13,9 +13,9 @@ namespace FakeDataGeneratorWindows
     {
         private static int amount = 100;
 
-        private static List<string> FirstNames = File.ReadAllLines("../Data/nameB.txt").ToList();
-        private static List<string> LastNames = File.ReadAllLines("../Data/middle.txt").ToList();
-        private static List<string> PatronymicList = File.ReadAllLines("../Data/last.txt").ToList();
+        private static List<string> FirstNames = File.ReadAllLines("Data/nameB.txt").ToList();
+        private static List<string> LastNames = File.ReadAllLines("Data/middle.txt").ToList();
+        private static List<string> PatronymicList = File.ReadAllLines("Data/last.txt").ToList();
 
 
 
